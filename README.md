@@ -125,6 +125,28 @@ env-carry run -f .env.carry -- npm run dev
 
 ---
 
+## Documentation
+
+A minimalist documentation frontend is included in the repository under `docs/`:
+
+```bash
+# Open directly in browser
+open docs/index.html
+
+# Or run local preview server
+npm run docs
+```
+
+Topics covered:
+- Codebase takeover guides and rotation workflows
+- Ephemeral peer transit with burn-after-reading
+- Chat-safe armor codes and async handoffs
+- Configuration drift detection
+- Memory-only process execution
+- Complete CLI command reference
+
+---
+
 ## Cryptography Specification
 
 | Layer | Implementation |

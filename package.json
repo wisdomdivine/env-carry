@@ -13,6 +13,7 @@
     "watch": "tsc -w",
     "test": "vitest run",
     "test:watch": "vitest",
+    "docs": "npx serve docs",
     "prepublishOnly": "npm run build"
   },
   "keywords": [

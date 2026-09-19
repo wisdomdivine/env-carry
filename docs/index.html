@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>env-carry documentation</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-sans/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/geist@1.3.0/dist/fonts/geist-mono/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Bar -->
+    <header class="topbar">
+      <div class="topbar-brand">
+        <span class="project-name">env-carry</span>
+        <span class="brand-sub">docs</span>
+      </div>
+      <div class="topbar-search">
+        <i class="ti ti-search search-icon"></i>
+        <input type="text" id="searchInput" placeholder="Search commands, workflows, concepts..." autocomplete="off">
+        <span class="shortcut-hint">/</span>
+      </div>
+      <div class="topbar-actions">
+        <a href="https://github.com/wisdomdivine/env-carry" target="_blank" rel="noreferrer" class="github-link" title="GitHub Repository">
+          <i class="ti ti-brand-github"></i>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="main-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar" id="sidebar">
+        <nav class="nav-tree" id="navTree">
+          <div class="nav-group">
+            <div class="nav-group-title">Overview</div>
+            <a href="#introduction" class="nav-link active">Introduction</a>
+            <a href="#why-env-carry" class="nav-link">Why env-carry</a>
+            <a href="#security-spec" class="nav-link">Security Model</a>
+          </div>
+
+          <div class="nav-group">
+            <div class="nav-group-title">Quickstart</div>
+            <a href="#installation" class="nav-link">Installation</a>
+            <a href="#core-concepts" class="nav-link">Core Concepts</a>
+          </div>
+
+          <div class="nav-group">
+            <div class="nav-group-title">Workflows</div>
+            <a href="#workflow-takeover" class="nav-link">Codebase Takeover</a>
+            <a href="#workflow-transit" class="nav-link">Ephemeral Transfer</a>
+            <a href="#workflow-armor" class="nav-link">Chat-Safe Armor Codes</a>
+            <a href="#workflow-drift" class="nav-link">Drift Detection</a>
+            <a href="#workflow-runner" class="nav-link">Memory-Only Execution</a>
+          </div>
+
+          <div class="nav-group">
+            <div class="nav-group-title">Commands Reference</div>
+            <a href="#cmd-audit" class="nav-link">env-carry audit</a>
+            <a href="#cmd-send" class="nav-link">env-carry send</a>
+            <a href="#cmd-receive" class="nav-link">env-carry receive</a>
+            <a href="#cmd-pack" class="nav-link">env-carry pack</a>
+            <a href="#cmd-unpack" class="nav-link">env-carry unpack</a>
+            <a href="#cmd-check" class="nav-link">env-carry check</a>
+            <a href="#cmd-run" class="nav-link">env-carry run</a>
+            <a href="#cmd-seal" class="nav-link">env-carry seal / unseal</a>
+          </div>
+        </nav>
+      </aside>
+
+      <!-- Main Docs Content Area -->
+      <main class="content-area" id="contentArea">
+        
+        <!-- Section: Introduction -->
+        <section id="introduction" class="doc-section">
+          <h1>Introduction</h1>
+          <p class="lead">
+            env-carry is a zero-setup, end-to-end encrypted CLI tool for transferring environment variables, auditing inherited codebases, detecting configuration drift, and executing applications without writing unencrypted secrets to disk.
+          </p>
+          <p>
+            It eliminates the dangerous practice of pasting plaintext .env files into Slack, Telegram, WhatsApp, or email threads during project takeovers and team handoffs.
+          </p>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">Quick Run</span>
+              <button class="copy-btn" data-copy="npx env-carry --help">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="kw">npx</span> env-carry --help</code></pre>
+          </div>
+        </section>
+
+        <!-- Section: Why env-carry -->
+        <section id="why-env-carry" class="doc-section">
+          <h2>Why env-carry</h2>
+          <p>
+            Developers usually share secrets insecurely because enterprise secrets managers (Doppler, Vault, 1Password) impose friction: mandatory accounts, paid seat pricing, team invite flows, and complex dashboard configurations.
+          </p>
+          <p>
+            During a rapid codebase takeover, contractor onboarding, or startup launch, developers default to the fastest path. env-carry offers the speed of a chat message with the security of AES-256-GCM encryption.
+          </p>
+
+          <div class="comparison-table">
+            <div class="table-row table-header">
+              <div class="table-cell">Dimension</div>
+              <div class="table-cell">Chat (Slack/Telegram)</div>
+              <div class="table-cell purple-text">env-carry</div>
+              <div class="table-cell">Enterprise Vaults</div>
+            </div>
+            <div class="table-row">
+              <div class="table-cell">Setup Required</div>
+              <div class="table-cell">Zero</div>
+              <div class="table-cell purple-text">Zero (npx)</div>
+              <div class="table-cell">Accounts, seats, invites</div>
+            </div>
+            <div class="table-row">
+              <div class="table-cell">Encryption</div>
+              <div class="table-cell">Plaintext in cloud logs</div>
+              <div class="table-cell purple-text">AES-256-GCM E2EE</div>
+              <div class="table-cell">Encrypted at rest</div>
+            </div>
+            <div class="table-row">
+              <div class="table-cell">Takeover Audit</div>
+              <div class="table-cell">None</div>
+              <div class="table-cell purple-text">30+ services and git leak check</div>
+              <div class="table-cell">Manual config</div>
+            </div>
+            <div class="table-row">
+              <div class="table-cell">Disk Security</div>
+              <div class="table-cell">Plaintext file on disk</div>
+              <div class="table-cell purple-text">In-memory execution</div>
+              <div class="table-cell">CLI injection</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Security Model -->
+        <section id="security-spec" class="doc-section">
+          <h2>Security Model</h2>
+          <p>
+            All cryptographic operations use native Node.js crypto primitives with no external C-bindings or insecure dependencies.
+          </p>
+          <ul class="spec-list">
+            <li>
+              <span class="spec-label">Cipher:</span>
+              <span class="spec-value">AES-256-GCM (Galois/Counter Mode)</span>
+            </li>
+            <li>
+              <span class="spec-label">Key Derivation:</span>
+              <span class="spec-value">scrypt (N=16384, r=8, p=1) with 128-bit random salt</span>
+            </li>
+            <li>
+              <span class="spec-label">Integrity Tag:</span>
+              <span class="spec-value">128-bit authentication tag, aborts instantly on tampering</span>
+            </li>
+            <li>
+              <span class="spec-label">IV Nonce:</span>
+              <span class="spec-value">96-bit unique cryptographically secure random bytes</span>
+            </li>
+            <li>
+              <span class="spec-label">Transit Lifecycle:</span>
+              <span class="spec-value">Single-use ephemeral relay with immediate burn-after-reading</span>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Section: Installation -->
+        <section id="installation" class="doc-section">
+          <h2>Installation</h2>
+          <p>
+            env-carry can be executed directly via npx without installation, or installed globally for permanent terminal access.
+          </p>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">Terminal</span>
+              <button class="copy-btn" data-copy="npm install -g env-carry">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="comment"># Global installation</span>
+<span class="kw">npm</span> install -g env-carry
+
+<span class="comment"># Or zero-install execution</span>
+<span class="kw">npx</span> env-carry --help</code></pre>
+          </div>
+        </section>
+
+        <!-- Section: Core Concepts -->
+        <section id="core-concepts" class="doc-section">
+          <h2>Core Concepts</h2>
+          <div class="concept-item">
+            <h3>4-Word Passphrases</h3>
+            <p>
+              When encrypting, env-carry generates an easy-to-read, high-entropy 4-word code such as <code>amber-beacon-summit-oasis</code>. You can speak this to a teammate or send it via a separate channel.
+            </p>
+          </div>
+
+          <div class="concept-item">
+            <h3>Carry Armor (carry://)</h3>
+            <p>
+              A single-line URL-safe string containing the complete encrypted envelope (salt, IV, tag, ciphertext). Because it is fully encrypted with AES-256-GCM, it is safe to paste anywhere.
+            </p>
+          </div>
+
+          <div class="concept-item">
+            <h3>Burn-After-Reading</h3>
+            <p>
+              When transferring over the ephemeral peer relay, the server serves the encrypted payload once and terminates immediately.
+            </p>
+          </div>
+        </section>
+
+        <!-- Section: Workflow - Codebase Takeover -->
+        <section id="workflow-takeover" class="doc-section">
+          <h2>Workflow: Codebase Takeover</h2>
+          <p>
+            When taking over an existing repository, you must assume previous developers and contributors retain active credentials. env-carry automates credential identification, leak detection, and rotation.
+          </p>
+
+          <div class="steps-list">
+            <div class="step-item">
+              <div class="step-num">01</div>
+              <div class="step-content">
+                <h3>Run the Takeover Audit</h3>
+                <p>Scan your active environment file for known services and historical Git leaks.</p>
+                <div class="code-card">
+                  <div class="code-header">
+                    <span class="code-title">Terminal</span>
+                    <button class="copy-btn" data-copy="env-carry audit .env">
+                      <i class="ti ti-copy"></i>
+                      <span>Copy</span>
+                    </button>
+                  </div>
+                  <pre><code><span class="kw">env-carry</span> audit .env</code></pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">02</div>
+              <div class="step-content">
+                <h3>Review Classified Risk Levels</h3>
+                <p>
+                  env-carry recognizes 30+ service credentials: Supabase admin keys, Stripe secret keys, Resend, OpenAI, AWS, GitHub PATs, databases, and JWT secrets. Each is assigned a severity rating (CRITICAL, HIGH, MEDIUM).
+                </p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">03</div>
+              <div class="step-content">
+                <h3>Check for Git History Leaks</h3>
+                <p>
+                  The scanner uses git pickaxe log search to determine if any of your active secret values were ever committed to Git in the past. If found, they must be revoked immediately.
+                </p>
+              </div>
+            </div>
+
+            <div class="step-item">
+              <div class="step-num">04</div>
+              <div class="step-content">
+                <h3>Execute the Rotation Checklist</h3>
+                <p>
+                  The command outputs a ready-to-use <code>TAKEOVER_CHECKLIST.md</code> file with direct links to rotation settings in each provider dashboard.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Workflow - Ephemeral Transit -->
+        <section id="workflow-transit" class="doc-section">
+          <h2>Workflow: Ephemeral Peer Transfer</h2>
+          <p>
+            Transfer a .env file directly between two developers on the same local network or Wi-Fi without storing anything in cloud databases.
+          </p>
+
+          <div class="workflow-grid">
+            <div class="workflow-card">
+              <div class="workflow-role purple-text">Sender</div>
+              <p>Run send on your machine. env-carry encrypts the file in RAM and opens a temporary relay.</p>
+              <div class="code-card">
+                <pre><code><span class="kw">env-carry</span> send .env</code></pre>
+              </div>
+              <p class="muted-text">
+                Output gives you a 4-word passphrase and a temporary URL: <code>http://192.168.1.15:52341/carry</code>
+              </p>
+            </div>
+
+            <div class="workflow-card">
+              <div class="workflow-role purple-text">Receiver</div>
+              <p>Run receive on the destination machine with the provided URL.</p>
+              <div class="code-card">
+                <pre><code><span class="kw">env-carry</span> receive http://192.168.1.15:52341/carry</code></pre>
+              </div>
+              <p class="muted-text">
+                Input the passphrase when prompted. The file is decrypted, saved to .env, and the sender relay burns instantly.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section: Workflow - Armor Codes -->
+        <section id="workflow-armor" class="doc-section">
+          <h2>Workflow: Chat-Safe Armor Codes</h2>
+          <p>
+            When developers are remote or async, use armor codes. The payload is encrypted with AES-256-GCM and formatted as a URL-safe string.
+          </p>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">Sender creates armor string</span>
+              <button class="copy-btn" data-copy="env-carry pack .env --armor">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="kw">env-carry</span> pack .env --armor
+
+<span class="comment"># Output:</span>
+<span class="comment"># Passphrase: coral-beacon-pulse-summit</span>
+<span class="comment"># carry://eyJ2ZXJzaW9uIjoxLCJhbGdvIjoiYWVzLTI1Ni1nY20i...</span></code></pre>
+          </div>
+
+          <p>
+            Paste the <code>carry://...</code> code in Slack, Discord, or email. Send the passphrase via a separate channel or direct message.
+          </p>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">Receiver unpacks armor string</span>
+              <button class="copy-btn" data-copy="env-carry unpack &quot;carry://...&quot; -p &quot;coral-beacon-pulse-summit&quot;">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="kw">env-carry</span> unpack <span class="str">"carry://eyJ2ZXJzaW9uIjoxLCJ..."</span> -p <span class="str">"coral-beacon-pulse-summit"</span></code></pre>
+          </div>
+        </section>
+
+        <!-- Section: Workflow - Drift Detection -->
+        <section id="workflow-drift" class="doc-section">
+          <h2>Workflow: Drift Detection</h2>
+          <p>
+            Prevent broken development builds caused by missing environment variables or stale template keys.
+          </p>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">Check for drift</span>
+              <button class="copy-btn" data-copy="env-carry check .env -e .env.example">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="kw">env-carry</span> check .env -e .env.example</code></pre>
+          </div>
+
+          <p>The check inspects three conditions:</p>
+          <ul class="clean-list">
+            <li><strong>Missing Keys:</strong> Variables present in .env.example but omitted in your active .env.</li>
+            <li><strong>Unconfigured Placeholders:</strong> Values still set to dummy defaults such as <code>your_key_here</code>, <code>TODO</code>, or <code>xxx</code>.</li>
+            <li><strong>Empty Keys:</strong> Keys defined with empty values.</li>
+          </ul>
+        </section>
+
+        <!-- Section: Workflow - Memory-Only Execution -->
+        <section id="workflow-runner" class="doc-section">
+          <h2>Workflow: Memory-Only Execution</h2>
+          <p>
+            Do not keep plaintext .env files lying on disk where rogue npm dependencies, scripts, or accidental <code>git add .</code> commands can capture them.
+          </p>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">1. Seal the environment into git-trackable ciphertext</span>
+              <button class="copy-btn" data-copy="env-carry seal .env">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="kw">env-carry</span> seal .env
+<span class="comment"># Creates .env.carry. You can delete .env from disk.</span></code></pre>
+          </div>
+
+          <div class="code-card">
+            <div class="code-header">
+              <span class="code-title">2. Run your application directly</span>
+              <button class="copy-btn" data-copy="env-carry run -f .env.carry -- npm run dev">
+                <i class="ti ti-copy"></i>
+                <span>Copy</span>
+              </button>
+            </div>
+            <pre><code><span class="kw">env-carry</span> run -f .env.carry -- npm run dev</code></pre>
+          </div>
+          <p>
+            env-carry decrypts the variables into RAM and injects them directly into the child process environment table. When the process finishes, the secrets disappear from memory.
+          </p>
+        </section>
+
+        <!-- Section: Commands Reference -->
+        <section id="cmd-audit" class="doc-section">
+          <h2>Commands Reference</h2>
+
+          <div class="cmd-block">
+            <h3>env-carry audit [file]</h3>
+            <p>Audits environment variables, matches 30+ service patterns, and scans Git history for leaks.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>--checklist [path]</code></div>
+                <div class="table-cell">Exports Markdown checklist file (defaults to TAKEOVER_CHECKLIST.md)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-send">
+            <h3>env-carry send [file]</h3>
+            <p>Encrypts a file in-memory and opens an ephemeral burn-after-reading HTTP relay.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-p, --passphrase &lt;phrase&gt;</code></div>
+                <div class="table-cell">Custom passphrase (auto-generated if omitted)</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>--port &lt;port&gt;</code></div>
+                <div class="table-cell">Specific port for local relay server (defaults to random port)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-receive">
+            <h3>env-carry receive &lt;target&gt;</h3>
+            <p>Fetches from a relay URL or dearmors a carry:// string, decrypts with passphrase, and writes to disk.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-p, --passphrase &lt;phrase&gt;</code></div>
+                <div class="table-cell">Decryption passphrase</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-o, --output &lt;path&gt;</code></div>
+                <div class="table-cell">Target destination path (defaults to .env)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-pack">
+            <h3>env-carry pack [file]</h3>
+            <p>Encrypts .env into a .carry file or armor string.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>--armor</code></div>
+                <div class="table-cell">Prints copy-pasteable carry:// string to terminal instead of file</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-o, --output &lt;path&gt;</code></div>
+                <div class="table-cell">Destination file (defaults to [file].carry)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-unpack">
+            <h3>env-carry unpack &lt;source&gt;</h3>
+            <p>Decrypts a .carry file or carry:// string into .env format.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>--stdout</code></div>
+                <div class="table-cell">Prints decrypted variables directly to stdout without writing to disk</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-o, --output &lt;path&gt;</code></div>
+                <div class="table-cell">Target output path (defaults to .env)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-check">
+            <h3>env-carry check [file]</h3>
+            <p>Validates active .env against a template example file to catch drift.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-e, --example &lt;path&gt;</code></div>
+                <div class="table-cell">Path to example file (defaults to auto-detecting .env.example)</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-run">
+            <h3>env-carry run [command...]</h3>
+            <p>Injects environment variables into child process memory without unencrypting on disk.</p>
+            <div class="options-table">
+              <div class="table-row table-header">
+                <div class="table-cell">Flag</div>
+                <div class="table-cell">Description</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-f, --file &lt;path&gt;</code></div>
+                <div class="table-cell">Source file: .env or .env.carry (defaults to .env)</div>
+              </div>
+              <div class="table-row">
+                <div class="table-cell"><code>-p, --passphrase &lt;phrase&gt;</code></div>
+                <div class="table-cell">Decryption passphrase if using an encrypted file</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="cmd-block" id="cmd-seal">
+            <h3>env-carry seal / unseal</h3>
+            <p>Seals .env into encrypted .env.carry or unseals .env.carry back to .env.</p>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

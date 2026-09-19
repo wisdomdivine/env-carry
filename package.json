@@ -1,0 +1,40 @@
+{
+  "name": "env-carry",
+  "version": "1.0.0",
+  "description": "Zero-friction, end-to-end encrypted environment transfer, drift detection, and takeover audit for developers.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "env-carry": "bin/env-carry.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "env",
+    "dotenv",
+    "secrets",
+    "security",
+    "encryption",
+    "audit",
+    "codebase-takeover",
+    "cli",
+    "transfer"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "picocolors": "^1.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.5",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  }
+}
